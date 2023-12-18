@@ -2,7 +2,7 @@
 
 ###### _zachs18 :: forall a. IO a (@pizzapants184 on discord)_
 
-(see the original before improvements)[https://github.com/shivajichalise/corrosion/commit/f6505edaea39b2e299f67aea7cd989e279b3759f#diff-6e6182021c370680c381ea98bb2a6cd6702c44ed417263f5c926d7e88286840d]
+[see the original before improvements](https://github.com/shivajichalise/corrosion/commit/f6505edaea39b2e299f67aea7cd989e279b3759f#diff-6e6182021c370680c381ea98bb2a6cd6702c44ed417263f5c926d7e88286840d)
 
 1. I'd recommend using an iterative `loop { if valid { return; } }` pattern instead of a recursive `if !valid { recurse(); }` pattern to parse user input, e.g.
 
