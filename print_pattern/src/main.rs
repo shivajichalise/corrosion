@@ -1,4 +1,7 @@
-use std::io::{self, Write};
+use std::{
+    io::{self, Write},
+    process::exit,
+};
 
 enum PatternVerticleType {
     TopToBottom,
@@ -10,107 +13,107 @@ enum PatternHorizontalType {
     RightToLeft,
 }
 
+fn take_input_from_stdin(var: &mut String) {
+    io::stdout().flush().unwrap();
+    if io::stdin()
+        .read_line(var)
+        .expect("Failed to read the input. :(")
+        == 0
+    {
+        println!();
+        println!("EOF detected. Exiting....");
+        exit(0);
+    }
+}
+
 fn take_length_input() -> u32 {
     let mut input = String::new();
 
-    print!("Give the length of the pattern: ");
-    io::stdout().flush().unwrap();
+    loop {
+        input.clear();
+        print!("Give the length of the pattern: ");
 
-    io::stdin()
-        .read_line(&mut input)
-        .expect("Failed to read the input. :(");
+        take_input_from_stdin(&mut input);
 
-    let input: u32 = match input.trim().parse() {
-        Ok(i) => i,
-        Err(_) => {
-            println!();
-            println!("-----------------------");
-            println!("Please give an integer.");
-            println!("-----------------------");
-            println!();
-            take_length_input()
-        }
-    };
-
-    input
+        match input.trim().parse() {
+            Ok(i) => return i,
+            Err(_) => {
+                println!();
+                println!("-----------------------");
+                println!("Please give an integer.");
+                println!("-----------------------");
+                println!();
+            }
+        };
+    }
 }
 
 fn take_verticle_type_input() -> PatternVerticleType {
     let mut input = String::new();
 
-    println!("Please choose one option.");
-    println!("1. Top to bottom");
-    println!("2. Bottom to top");
-    print!("Enter either 1 or 2: ");
-    io::stdout().flush().unwrap();
+    loop {
+        input.clear();
 
-    io::stdin()
-        .read_line(&mut input)
-        .expect("Failed to read the input. :(");
+        println!("Please choose one option.");
+        println!("1. Top to bottom");
+        println!("2. Bottom to top");
+        print!("Enter either 1 or 2: ");
 
-    let input: PatternVerticleType = match input.trim().parse() {
-        Ok(i) => match i {
-            1 => PatternVerticleType::TopToBottom,
-            2 => PatternVerticleType::BottomToTop,
-            _ => {
+        take_input_from_stdin(&mut input);
+
+        match input.trim().parse::<u32>() {
+            Ok(1) => return PatternVerticleType::TopToBottom,
+            Ok(2) => return PatternVerticleType::BottomToTop,
+            Ok(_) => {
                 println!();
                 println!("***************************");
                 println!("Please enter either 1 or 2.");
                 println!("***************************");
                 println!();
-                take_verticle_type_input()
             }
-        },
-        Err(_) => {
-            println!();
-            println!("-----------------------");
-            println!("Please give an integer.");
-            println!("-----------------------");
-            println!();
-            take_verticle_type_input()
-        }
-    };
-
-    input
+            Err(_) => {
+                println!();
+                println!("-----------------------");
+                println!("Please give an integer.");
+                println!("-----------------------");
+                println!();
+            }
+        };
+    }
 }
 
 fn take_horizontal_type_input() -> PatternHorizontalType {
     let mut input = String::new();
 
-    println!("Please choose one option.");
-    println!("1. Left to right");
-    println!("2. Right to left");
-    print!("Enter either 1 or 2: ");
-    io::stdout().flush().unwrap();
+    loop {
+        input.clear();
 
-    io::stdin()
-        .read_line(&mut input)
-        .expect("Failed to read the input. :(");
+        println!("Please choose one option.");
+        println!("1. Left to right");
+        println!("2. Right to left");
+        print!("Enter either 1 or 2: ");
 
-    let input: PatternHorizontalType = match input.trim().parse() {
-        Ok(i) => match i {
-            1 => PatternHorizontalType::LeftToRight,
-            2 => PatternHorizontalType::RightToLeft,
-            _ => {
+        take_input_from_stdin(&mut input);
+
+        match input.trim().parse::<u32>() {
+            Ok(1) => return PatternHorizontalType::LeftToRight,
+            Ok(2) => return PatternHorizontalType::RightToLeft,
+            Ok(_) => {
                 println!();
                 println!("***************************");
                 println!("Please enter either 1 or 2.");
                 println!("***************************");
                 println!();
-                take_horizontal_type_input()
             }
-        },
-        Err(_) => {
-            println!();
-            println!("-----------------------");
-            println!("Please give an integer.");
-            println!("-----------------------");
-            println!();
-            take_horizontal_type_input()
-        }
-    };
-
-    input
+            Err(_) => {
+                println!();
+                println!("-----------------------");
+                println!("Please give an integer.");
+                println!("-----------------------");
+                println!();
+            }
+        };
+    }
 }
 
 fn print_top_to_bottom_pattern(length: u32, horizontal_type: PatternHorizontalType) {
