@@ -1,0 +1,89 @@
+use regex::Regex;
+use std::{
+    collections::HashMap,
+    io::{self, Write},
+    process::exit,
+};
+
+fn take_user_input(shell: &mut String) {
+    io::stdout().flush().unwrap();
+
+    if io::stdin()
+        .read_line(shell)
+        .expect("Failed to read the input.")
+        == 0
+    {
+        println!();
+        println!("EOF detected. Exiting....");
+        exit(0);
+    }
+}
+
+fn check_string_validity(string: &String) -> bool {
+    let pattern = Regex::new(r"^Add (\w+) to (\w+)$").unwrap();
+    let Some(_) = pattern.captures(string) else {
+        // not valid
+        return false;
+    };
+
+    true
+}
+
+fn check_if_quit_command(string: &String) -> bool {
+    match string.trim().parse::<char>() {
+        Ok('q') => return true,
+        Ok(_) => return false,
+        Err(_) => {
+            false
+        }
+    }
+}
+
+fn add_name_to_hashmap<'a>(
+    list: &'a mut HashMap<String, Vec<String>>,
+    string: &'a String,
+) -> &'a mut HashMap<String, Vec<String>> {
+    let pattern = Regex::new(r"^Add (?<department>\w+) to (?<employee>\w+)$").unwrap();
+
+    if let Some(captured) = pattern.captures(string) {
+        let mut employees = Vec::new();
+        employees.push(captured["employee"].to_string());
+
+        list.insert(captured["department"].to_string(), employees);
+    } else {
+        println!("invalid input!");
+        return list;
+    };
+
+    list
+}
+
+fn main() {
+    println!("-------------------------------------------------------");
+    print!("Input formart: 'Add <employee_name> to <department_name>'");
+    print!("eg. Add Sally to Engineering or Add Amir to Sales");
+    println!("-------------------------------------------------------");
+    println!();
+    print!("Please enter your employee (enter q to exit): ");
+
+    let mut input = String::new();
+    let mut list = HashMap::new();
+
+    loop {
+        input.clear();
+
+        take_user_input(&mut input);
+
+        if check_if_quit_command(&input) {
+            break;
+        }
+
+        if check_string_validity(&input) {
+            break;
+        }
+
+        add_name_to_hashmap(&mut list, &input);
+    }
+
+    println!("{:?}", list);
+}
